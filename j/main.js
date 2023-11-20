@@ -1,10 +1,8 @@
-
-//This code does NOT create any global variables.
-//Promises can be chained together, with the previous promise
-// passing its results to the next one in the chain.
-// the format is: fetch().then().then().catch()
-//it's easier to read if we put each step in its own line,
-//that's why the periods start the then lines.
+//part 2: fetch color
+fetch("https://www.colr.org/json/color/latest")
+    .then((response) => response.json())
+    .then((color) => {
+        const newColor = color.colors[0].hex;
 
 fetch("houses.json")
     .then((response) => response.json())
@@ -19,8 +17,15 @@ fetch("houses.json")
 
             // generate the html snippet for one array item
             //to be added to the "html" temp holder.
-            let objInfo = `<p class="house">${house.name}</p>
-        <p class="folks">${family}</p>`;
+            let objInfo = `
+            <div class="box" style="background-color: #${newColor}">
+                <dl class="list">
+                    <dt class="house"><span>House:</span> ${house.name}</dt>
+                    <dd class="folks">Members: ${family}</dd>
+                </dl>
+            </div>
+            `;
+
             html += objInfo;
         });
 
@@ -29,5 +34,8 @@ fetch("houses.json")
         const container = document.querySelector("#container");
         container.innerHTML = html;
     })
-    .catch((err) => console.log("Oops!", err));
+    .catch((err) => console.log("Oops, the data isn't working!", err));
     //this only runs if there is an error during the above process
+})
+.catch((err) => console.log("Oops, the color isn't working!",err));
+//this only runs if there is an error during the above process
